@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import clientCreds from './apikey.js';
 
 const GetData = ()=>{
 
@@ -9,7 +8,6 @@ const [genresPlayList, setGenresPlayList] = useState([{id:"",name:""}]);
 useEffect(()=>{
 
     const apiCtrler = (function (){
-
 
         const clientId = process.env.REACT_APP_CLIENT_ID;
         const clientSecret = process.env.REACT_APP_CLIENT_SECRET;
