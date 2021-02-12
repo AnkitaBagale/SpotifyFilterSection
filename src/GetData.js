@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 const GetData = ()=>{
 
 const [genresList, setGenresList] = useState([]);
-const [genresPlayList, setGenresPlayList] = useState([{id:"",name:""}]);
+// const [genresPlayList, setGenresPlayList] = useState([{id:"",name:""}]);
 
 useEffect(()=>{
 
@@ -101,7 +101,7 @@ useEffect(()=>{
         //get the genres
         const genres = await APICtrl.getGenres(token);
         
-        const playlist = await APICtrl.getPlaylistByGenre(token, "toplists");
+        // const playlist = await APICtrl.getPlaylistByGenre(token, "toplists");
         
         setGenresList(genres.map((genre)=>{return {id: genre.id, name:genre.name}}))
         
@@ -121,7 +121,7 @@ useEffect(()=>{
     return(
         <div>
             {genresList.map((listitem)=>{
-                return <li id={listitem.id}>{listitem.name}</li>
+                return <li key={listitem.id}>{listitem.name}</li>
             })}
         </div>
     )
