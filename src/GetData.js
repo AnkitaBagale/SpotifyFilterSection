@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from 'react';
 
+var tracksData = [];
+var tracksToShow = [];
+
 const GetData = ()=>{
 
 const [genresList, setGenresList] = useState([]);
-// const [genresPlayList, setGenresPlayList] = useState([{id:"",name:""}]);
+const [trackList, setTrackList] = useState([{trackid:"",trackname:"", trackartist:"", trackimage:""}]);
 
 useEffect(()=>{
 
@@ -28,7 +31,7 @@ useEffect(()=>{
         //private function to get list of genres
         const _getGenres = async (token) => {
 
-            const result = await fetch(`https://api.spotify.com/v1/browse/categories?country=US&locale=en_US&limit=10`, {
+            const result = await fetch(`https://api.spotify.com/v1/browse/categories?country=IN&locale=in_IN&limit=10`, {
                 method: 'GET',
                 headers: { 'Authorization' : 'Bearer ' + token}
             });
@@ -59,6 +62,7 @@ useEffect(()=>{
             });
     
             const data = await result.json();
+            
             return data.items;
         }
     
@@ -101,7 +105,24 @@ useEffect(()=>{
         //get the genres
         const genres = await APICtrl.getGenres(token);
         
-        // const playlist = await APICtrl.getPlaylistByGenre(token, "toplists");
+        const playlist = await APICtrl.getPlaylistByGenre(token, genres[0].id);
+        console.log(playlist);
+
+        for(let i=0;i<playlist.length; i++){
+            tracksData[i] = await APICtrl.getTracks(token, playlist[i].tracks.href);
+        }
+        for(let i=0;i<tracksData.length; i++){
+            for(let j=0; j<5; j++){
+                if(tracksData[i][j]==undefined){
+                    break;
+                }
+                if(tracksToShow.includes(tracksData[i][j].trackid)){
+                    continue;
+                }
+                tracksToShow.push({trackid: tracksData[i][j].track.id, trackname: tracksData[i][j].track.name, trackartist: tracksData[i][j].track.artists.map((e)=>e.name), trackimage: tracksData[i][j].track.album.images[0].url})
+            }
+        }
+        setTrackList(tracksToShow);
         
         setGenresList(genres.map((genre)=>{return {id: genre.id, name:genre.name}}))
         
@@ -119,10 +140,22 @@ useEffect(()=>{
 },[]);
 
     return(
-        <div>
-            {genresList.map((listitem)=>{
-                return <li key={listitem.id}>{listitem.name}</li>
-            })}
+        <div style={{display:"flex"}}>
+            <div>
+                {genresList.map((listitem)=>{
+                    return <li id="listitem.id" key={listitem.id}>{listitem.name}</li>
+                })}
+            </div>
+            <br/>
+            <div style={{backgroundColor:"pink"}}>
+                {
+                    trackList.map((listitem)=>{
+                        return (<li id="listitem.trackid" key={listitem.trackid}>
+                                    {listitem.trackname}
+                                </li>)
+                    })
+                }
+            </div>
         </div>
     )
 }
