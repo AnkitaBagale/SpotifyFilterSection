@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
-var tracksData = [];
-var tracksToShow = [];
+let tracksData = [];
+let tracksToShow = [];
 
 const GetData = ()=>{
 
